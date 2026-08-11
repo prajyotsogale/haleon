@@ -1,5 +1,6 @@
-package Haleon.auth;
+package Haleon.auth.user;
 
+import Haleon.auth.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,23 +19,28 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "email")
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
-    @Column(name = "phone_number")
+    @Column(nullable = false, length = 255)
+    private String password;
+    @Column(name = "enabled")
+    private boolean enabled;
+    @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
-    @Column(name = "DOB")
-    private LocalDate DOB;
+    @Column(name = "dob")
+    private LocalDate dob;
     @Column(name = "address")
     private String address;
 //    @Column(name = "cif_number", unique = true, nullable = false)
     @Column(name = "cif_number")
     private String cifNumber;
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 }

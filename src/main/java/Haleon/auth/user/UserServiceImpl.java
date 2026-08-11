@@ -1,4 +1,4 @@
-package Haleon.auth;
+package Haleon.auth.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +51,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        Optional<User> theUser = userRepository.findByEmail(email);
+        if(theUser.isEmpty()){
+            throw new RuntimeException("No User exists of email: "+email);
+        }
+        return theUser.get();
     }
 }
