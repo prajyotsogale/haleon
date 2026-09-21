@@ -1,5 +1,7 @@
 package Haleon.auth.service;
 
+import Haleon.auth.dto.LoginDto;
+import Haleon.auth.dto.LoginResponse;
 import Haleon.auth.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,9 +22,14 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String login(String email, String password) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authentication = authenticationManager.authenticate(token);
-        return jwtService.generateToken(authentication);
+    public LoginResponse login(LoginDto loginDto) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                loginDto.email(),
+                loginDto.password()
+        );
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        String token = jwtService.generateToken(authentication);
+        return new LoginResponse(token,
+                "Bearer");
     }
 }

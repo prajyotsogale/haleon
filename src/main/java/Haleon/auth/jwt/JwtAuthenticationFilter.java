@@ -1,6 +1,6 @@
 package Haleon.auth.jwt;
 
-import io.jsonwebtoken.JwtException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,14 +46,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try{
             String username = jwtService.extractUsername(token);
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if(jwtService.isTokenValid(token, userDetails)){
+            if(jwtService.isTokenValid(token, userDetails) && userDetails.isEnabled()){
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-                SecurityContextHolder .getContext().setAuthentication(authenticationToken);
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
             }
-        }catch (JwtException e){
+        }catch (Exception e){
             SecurityContextHolder.clearContext();
         }
 

@@ -43,6 +43,31 @@ public class HaleonApplication {
 		user.setRole(role);
 		userService.createUser(user);
 		System.out.println("added user-prajyot as a admin");
+
+
+		user.setName("customer");
+		user.setPassword(passwordEncoder.encode("customer"));
+		user.setEnabled(true);
+		user.setPhoneNumber("1234567890");
+		user.setDob(LocalDate.now());
+		user.setAddress("prajyot");
+		user.setEmail("customer@gmail.com");
+		role =  roleService.checkRoleById(2);
+		user.setRole(role);
+		userService.createUser(user);
+		System.out.println("added user-customer as a customer");
+
+		user.setName("employee");
+		user.setPassword(passwordEncoder.encode("employee"));
+		user.setEnabled(true);
+		user.setPhoneNumber("1234567777");
+		user.setDob(LocalDate.now());
+		user.setAddress("prajyot");
+		user.setEmail("employee@gmail.com");
+		role =  roleService.checkRoleById(3);
+		user.setRole(role);
+		userService.createUser(user);
+		System.out.println("added user-employee as a employee");
 	}
 
 	private void addRoles(RoleService roleService) {

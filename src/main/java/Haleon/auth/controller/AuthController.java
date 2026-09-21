@@ -1,10 +1,12 @@
 package Haleon.auth.controller;
 
 import Haleon.auth.dto.LoginDto;
+import Haleon.auth.dto.LoginResponse;
 import Haleon.auth.service.AuthService;
 import Haleon.auth.user.User;
 import Haleon.auth.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -20,9 +22,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginDto loginDto){
-        String message = authService.login(loginDto.getEmail(), loginDto.getPassword());
-        return message;
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginDto loginDto
+    ) {
+        return ResponseEntity.ok(authService.login(loginDto));
     }
 
 

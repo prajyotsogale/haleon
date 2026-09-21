@@ -15,10 +15,14 @@ import java.util.Date;
 public class JwtServiceImpl implements JwtService{
 
     private final JwtProperties jwtProperties;
+    private final SecretKey signingKey;
 
     @Autowired
     public JwtServiceImpl(JwtProperties jwtProperties){
         this.jwtProperties = jwtProperties;
+        this.signingKey = Keys.hmacShaKeyFor(
+                jwtProperties.secret().getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     @Override
@@ -27,20 +31,15 @@ public class JwtServiceImpl implements JwtService{
                 .subject(authentication.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.expiration()))
-                .signWith(getSignedKey())
+                .signWith(signingKey)
                 .compact();
 
-    }
-    private SecretKey getSignedKey(){
-        return Keys.hmacShaKeyFor(
-                jwtProperties.secret().getBytes(StandardCharsets.UTF_8)
-        );
     }
 
     @Override
     public String extractUsername(String token) {
         return Jwts.parser()
-                .verifyWith(getSignedKey())
+                .verifyWith(signingKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -49,7 +48,7 @@ public class JwtServiceImpl implements JwtService{
 
     private Date extractExpiration(String token) {
         return Jwts.parser()
-                .verifyWith(getSignedKey())
+                .verifyWith(signingKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
